@@ -1,8 +1,6 @@
-using System.Collections;
+using Custom;
 using System.Collections.Generic;
 using UnityEngine;
-using Custom;
-
 public class TowerObject : MonoBehaviour
 {
     public float coolTime = 0;
@@ -13,13 +11,19 @@ public class TowerObject : MonoBehaviour
 
     public TowerResource towerResource;
 
+    public Bullet bullet;
+
+    public List<Transform> effectStart;
+    public Effect effect;
+    public Effect fireEffect;
+
     public int towerLevel;
 
     public GameObject head;
 
     public List<TowerLevelMat> towerLevelMats;
-
     private Vector3 lookVec;
+
 
     private void Update()
     {
@@ -43,7 +47,7 @@ public class TowerObject : MonoBehaviour
                 critical = towerResource.critical[towerLevel];
 
             float speedB = 1;
-            float powB = 1;
+            float powB = 0;
             int criticalB = 0;
 
             for (int i = 0; i < TowerManager.Instance.towerObj.Count; i++)
@@ -73,9 +77,9 @@ public class TowerObject : MonoBehaviour
             coolTime /= speedB;
             coolTime = Mathf.Max(coolTime, 0.001f);
             critical += criticalB;
-
         }
     }
+
 
     private void Attack()
     {
@@ -86,6 +90,7 @@ public class TowerObject : MonoBehaviour
 
         //공격처리
         delay -= Time.deltaTime;
+
         for (int i = 0; i < MonsterSpwan.Instance.monsters.Count; i++)
             if (MonsterSpwan.Instance.monsters[i] != null && Vector3.Distance(transform.position, MonsterSpwan.Instance.monsters[i].transform.position) <= range && delay <= 0)
             {
@@ -99,13 +104,28 @@ public class TowerObject : MonoBehaviour
                 int random = Random.Range(0, 100);
                 if (random < critical)
                     nowDamage *= 2;
-                MonsterSpwan.Instance.monsters[i].hp -= nowDamage;
-                MonsterSpwan.Instance.monsters[i].GetDebuff(towerResource.debuffs, towerLevel);
+
+                for (int j = 0; j < effectStart.Count; j++)
+                {
+                    if (bullet != Bullet.NoBullet)
+                        BulletManager.FireBullet(bullet, effectStart[j].position, effectStart[j].transform.rotation, effectStart[j].transform.localScale, MonsterSpwan.Instance.monsters[i], nowDamage);
+                    else
+                    {
+                        MonsterSpwan.Instance.monsters[i].hp -= nowDamage;
+                        MonsterSpwan.Instance.monsters[i].GetDebuff(towerResource.debuffs, towerLevel);
+                        if (effect != Effect.NoEffect)
+                            EffectManager.EffectRun(effect, effectStart[j].position, effectStart[j].transform.rotation, effectStart[j].transform.localScale);
+                    }
+                    if (fireEffect != Effect.NoEffect)
+                        EffectManager.EffectRun(fireEffect, effectStart[j].position, effectStart[j].transform.rotation, effectStart[j].transform.localScale);
+                }
                 break;
             }
 
         //머리 회전
         head.transform.rotation = Quaternion.Lerp(head.transform.rotation, Quaternion.Euler(lookVec), Time.deltaTime * 5);
+
+
     }
 
     private void UpdateMats()

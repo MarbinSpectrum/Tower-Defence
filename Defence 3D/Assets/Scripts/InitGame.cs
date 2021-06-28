@@ -6,6 +6,7 @@ public class InitGame : MonoBehaviour
 {
     void Start()
     {
+        Time.timeScale = 2;
         CreateMap.Create();
         PlayerState.SetPlayerData(0, 100, 0, 3);
         Shop.SetShop();
