@@ -28,7 +28,11 @@ public class Shop : OpenUI<Shop>
     public void RefreshShop()
     {
         if (PlayerState.Instance.gold < REFRESH_VALUE)
+        {
+            SoundManager.PlaySE(SE.Error);
             return;
+        }
+        SoundManager.PlaySE(SE.Gold);
         PlayerState.Instance.gold -= REFRESH_VALUE;
         SetShop();
     }

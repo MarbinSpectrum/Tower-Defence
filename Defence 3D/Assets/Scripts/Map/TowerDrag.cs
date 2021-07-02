@@ -64,6 +64,10 @@ public class TowerDrag : MonoBehaviour
 
             MouseManager.isDragging = true;
             CameraManager.ChangeZoom(CameraManager.ZOOM_OUT);
+
+            nowDrag.GetComponent<TowerObject>().HideLine();
+
+            TowerManager.ReplaceTowerList();
         }
     }
 
@@ -89,10 +93,12 @@ public class TowerDrag : MonoBehaviour
             transform.position = new Vector3(MouseManager.nowTile.x, 0.2f, MouseManager.nowTile.y);
             TileManager.Instance.tile[MouseManager.nowTile.x, MouseManager.nowTile.y].tower = gameObject;
             firstPos = new Vector2Int(MouseManager.nowTile.x, MouseManager.nowTile.y);
+            TowerManager.ReplaceTowerList();
+            SoundManager.PlaySE(SE.ObjMove);
         }
         else if (checkState == TowerCheckState.Tower_Exist)
         {
-            if (TowerSameCheck(TileManager.Instance.tile[MouseManager.nowTile.x, MouseManager.nowTile.y].tower))
+            if (TowerSameCheck(towerObject.gameObject,TileManager.Instance.tile[MouseManager.nowTile.x, MouseManager.nowTile.y].tower))
             {
                 Destroy(TileManager.Instance.tile[MouseManager.nowTile.x, MouseManager.nowTile.y].tower);
 
@@ -103,6 +109,8 @@ public class TowerDrag : MonoBehaviour
 
                 TowerManager.ReplaceTowerList();
                 PlayerState.Instance.nowTower--;
+                SoundManager.PlaySE(SE.LevelUp);
+                CameraManager.VibrationCamera(0.2f);
             }
             else
             {
@@ -118,12 +126,16 @@ public class TowerDrag : MonoBehaviour
 
                 SetFirstPos();
                 tempDrag.SetFirstPos();
+                TowerManager.ReplaceTowerList();
+                SoundManager.PlaySE(SE.ObjMove);
+
             }
         }
         else
         {
             SetFirstPos();
             TileManager.Instance.tile[firstPos.x, firstPos.y].tower = gameObject;
+            TowerManager.ReplaceTowerList();
         }
 
         SellTower.SetUIState(false);
@@ -139,17 +151,21 @@ public class TowerDrag : MonoBehaviour
         if (SellTower.Instance.isZone)
         {
             SellTower.Instance.isZone = false;
+            SoundManager.PlaySE(SE.Gold);
             Destroy(gameObject);
-            TowerManager.ReplaceTowerList();
             PlayerState.Instance.gold += (1 << towerObject.towerLevel) * (towerObject.towerResource.level + 1);
             PlayerState.Instance.nowTower--;
+            TowerManager.ReplaceTowerList(gameObject);
         }
     }
 
-    public bool TowerSameCheck(GameObject b)
+    public static bool TowerSameCheck(GameObject a,GameObject b)
     {
+        TowerObject at = a.GetComponent<TowerObject>();
         TowerObject bt = b.GetComponent<TowerObject>();
-        return (towerObject.towerLevel != 3 && towerObject.towerLevel == bt.towerLevel && towerObject.towerResource.name == bt.towerResource.name);
+        if (at == null || bt == null)
+            return false;
+        return (at.towerLevel != 3 && at.towerLevel == bt.towerLevel && at.towerResource.name == bt.towerResource.name);
     }
 
     public void SetFirstPos() => transform.position = new Vector3(firstPos.x, 0.2f, firstPos.y);

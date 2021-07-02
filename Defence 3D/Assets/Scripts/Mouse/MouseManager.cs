@@ -8,7 +8,7 @@ public class MouseManager : Singleton<MouseManager>
     public static Vector2Int nowTile;
     public static bool isDragging = false;
 
-    void Update()
+    private void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 

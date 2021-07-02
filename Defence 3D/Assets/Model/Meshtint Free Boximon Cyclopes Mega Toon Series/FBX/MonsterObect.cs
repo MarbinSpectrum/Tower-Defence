@@ -19,8 +19,22 @@ public class MonsterObect : MonoBehaviour
 
     private Vector3 moveVec;
 
+    public int damage = 1;
+
+    private Animator animator;
+
+    private void Start()
+    {
+        animator = transform.GetChild(0).GetComponent<Animator>();
+    }
+
     public void Update()
     {
+        if (PlayerState.Instance.gameOver)
+        {
+            animator.speed = 0;
+            return;
+        }
         burnTime += Time.deltaTime;
         if (burnTime > 1 && burnDamage > 0)
         {
@@ -32,6 +46,7 @@ public class MonsterObect : MonoBehaviour
         if (hp <= 0)
         {
             MonsterSpwan.existMonster--;
+            //Debug.Log(MonsterSpwan.existMonster);
             Destroy(gameObject);
         }
 
@@ -44,7 +59,7 @@ public class MonsterObect : MonoBehaviour
 
         //몬스터 이동
         Vector3 dic = (moveVec - transform.position).normalized;
-        float nowSpeed = Mathf.Max(1, speed - freezeSlow);
+        float nowSpeed = Mathf.Max(0.1f, speed - freezeSlow);
         Vector3 nextPos = transform.position + dic * nowSpeed * Time.deltaTime;
         if (Vector3.Distance(transform.position, moveVec) < Vector3.Distance(transform.position, nextPos))
             transform.position = moveVec;
@@ -60,8 +75,9 @@ public class MonsterObect : MonoBehaviour
             movePos = CreateMap.NextMovePos(movePos);
             if (movePos == -1)
             {
-                PlayerState.Instance.hp--;
+                PlayerState.Instance.hp-= damage;
                 MonsterSpwan.existMonster--;
+                //Debug.Log(MonsterSpwan.existMonster);
                 Destroy(gameObject);
             }
         }
@@ -69,12 +85,23 @@ public class MonsterObect : MonoBehaviour
     }
 
     private int freezeSlow = 0;
-
+    public bool nowFreeze
+    {
+        get { return freezeSlow > 0; }
+    }
     private int burnDamage = 0;
+    public bool nowBurn
+    {
+        get { return burnDamage > 0; }
+    }
     private float burnTime = 0;
 
     [NonSerialized]
     public int posionDamage = 0;
+    public bool nowPosion
+    {
+        get { return posionDamage > 0; }
+    }
 
     public void GetDebuff(List<TowerDebuff> debuffs, int towerLevel)
     {

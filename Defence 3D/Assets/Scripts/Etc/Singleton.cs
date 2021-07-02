@@ -17,7 +17,7 @@ public class Singleton<T> : SerializedMonoBehaviour where T : Singleton<T>
             return instance;
         }
     }
-    private void Awake()
+    public virtual void Awake()
     {
         if (instance == null)
         {

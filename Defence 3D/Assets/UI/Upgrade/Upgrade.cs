@@ -9,31 +9,50 @@ public class Upgrade : OpenUI<Upgrade>
     public void BuyHearth()
     {
         if (PlayerState.Instance.gold < h * h * 2)
+        {
+            ShowText.ViewText("금화가 부족합니다.");
+            SoundManager.PlaySE(SE.Error);
             return;
+        }
         PlayerState.Instance.gold -= h * h * 2;
         PlayerState.Instance.hp += 5;
-        PlayerState.Instance.hp = Mathf.Min(PlayerState.Instance.hp, 100);
+        PlayerState.Instance.hp = Mathf.Min(PlayerState.Instance.hp, PlayerState.Instance.maxHP);
+        SoundManager.PlaySE(SE.Gold);
         h++;
     }
 
     int l = 1;
     public void BuyLevel()
     {
-        if (l == 9 || PlayerState.Instance.gold < l * l * 2)
+        if (l == 9)
             return;
+        if (PlayerState.Instance.gold < l * l * 2)
+        {
+            ShowText.ViewText("금화가 부족합니다.");
+            SoundManager.PlaySE(SE.Error);
+            return;
+        }
         PlayerState.Instance.gold -= l * l * 2;
         PlayerState.Instance.level += 1;
         PlayerState.Instance.maxTower += 1;
+        SoundManager.PlaySE(SE.Gold);
         l++;
     }
 
     int p = 1;
     public void BuyPower()
     {
-        if (p == 20 || PlayerState.Instance.gold < p * p * 2)
+        if (p == 20)
             return;
+        if (PlayerState.Instance.gold < p * p * 2)
+        {
+            ShowText.ViewText("금화가 부족합니다.");
+            SoundManager.PlaySE(SE.Error);
+            return;
+        }
         PlayerState.Instance.gold -= p * p * 2;
         PlayerState.Instance.power += 1;
+        SoundManager.PlaySE(SE.Gold);
         p++;
     }
 

@@ -18,9 +18,9 @@ public class ShowText : MonoBehaviour
     private void Update()
     {
         if(text.alpha > 0.9f)
-            text.alpha = Mathf.Lerp(text.alpha, 0, 0.0003f);
+            text.alpha = Mathf.Lerp(text.alpha, 0, 0.003f);
         else
-            text.alpha = Mathf.Lerp(text.alpha, 0, 0.007f);
+            text.alpha = Mathf.Lerp(text.alpha, 0, 0.03f);
     }
 
     public static void ViewText(string s,Color color)

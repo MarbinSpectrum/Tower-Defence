@@ -33,6 +33,9 @@ public class Monster_HP : MonoBehaviour
                 bar[i].transform.position = MonsterSpwan.Instance.monsters[i].transform.position + offset;
                 bar[i].maxHP = MonsterSpwan.Instance.monsters[i].maxhp;
                 bar[i].nowHP = MonsterSpwan.Instance.monsters[i].hp;
+                bar[i].State[Debuff.Freeze] = MonsterSpwan.Instance.monsters[i].nowFreeze;
+                bar[i].State[Debuff.Burn] = MonsterSpwan.Instance.monsters[i].nowBurn;
+                bar[i].State[Debuff.Posion] = MonsterSpwan.Instance.monsters[i].nowPosion;
                 barRectTransform[i].localRotation = Quaternion.Euler(0,0,0);
                 barRectTransform[i].localScale = new Vector3(1, 1, 1);
             }

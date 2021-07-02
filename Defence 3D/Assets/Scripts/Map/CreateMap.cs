@@ -11,8 +11,8 @@ public class CreateMap : Singleton<CreateMap>
     public GameObject corner;
     public GameObject endRoad;
 
-    public const int R = 5;
-    public const int C = 5;
+    public const int R = 4;
+    public const int C = 3;
     public const int DIS = 2;
     public const int POINT = R * C;
     public const int DESTINATION = POINT - (((R % 2) == (C % 2) && (R % 2 == 0)) ? 1 : 0) * (C - 1);
@@ -30,6 +30,24 @@ public class CreateMap : Singleton<CreateMap>
 
     public static Vector3 SpawnPos;
     public static Vector3 EndPos;
+
+    public static void Init()
+    {
+        for (int i = 0; i < POINT; i++)
+            Instance.Visit[i] = false;
+        for (int i = 0; i < POINT; i++)
+            if(Instance.V[i] != null)
+                Instance.V[i].Clear();
+        Instance.route.Clear();
+        for (int i = 0; i < POINT; i++)
+            Instance.routeTemp[i] = 0;
+        Instance.nowRoute.Clear();
+        for (int i = 0; i < (C + 1) * DIS + 1; i++)
+            for (int j = 0; j < (R + 1) * DIS + 1; j++)
+                Instance.tile[i,j] = null;
+        for (int i = 0; i < POINT + 1; i++)
+            Instance.nextMovePos[i] = 0;
+    }
 
     private void pCreate()
     {

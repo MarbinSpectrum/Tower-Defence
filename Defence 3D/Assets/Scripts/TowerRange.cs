@@ -7,16 +7,18 @@ public class TowerRange : MonoBehaviour
     public Transform rangeObject;
     public Vector3 baseSize;
     public TowerObject towerObject;
+    private float nowRange;
     private void Update()
     {
         if (towerObject.towerResource == null)
             return;
 
-        if (!CameraManager.nowZoom || towerObject.towerResource.buffTower)
-            rangeObject.gameObject.SetActive(true);
-        else
-            rangeObject.gameObject.SetActive(false);
+        rangeObject.gameObject.SetActive(!CameraManager.nowZoom || towerObject.towerResource.buffTower);
 
-        rangeObject.localScale = baseSize * towerObject.range;
+        if(nowRange != towerObject.range)
+        {
+            nowRange = towerObject.range;
+            rangeObject.localScale = baseSize * nowRange;
+        }
     }
 }

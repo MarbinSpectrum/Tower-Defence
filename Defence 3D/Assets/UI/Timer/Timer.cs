@@ -29,4 +29,13 @@ public class Timer : MonoBehaviour
         else if (time > 0 && !animator.GetBool("Open"))
             animator.SetBool("Open", true);
     }
+
+    public void SkipTurn()
+    {
+        time = 0.1f;
+        if (time < 0 && animator.GetBool("Open"))
+            animator.SetBool("Open", false);
+        else if (time > 0 && !animator.GetBool("Open"))
+            animator.SetBool("Open", true);
+    }
 }

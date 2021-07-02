@@ -17,7 +17,7 @@ public class TowerSlot : MonoBehaviour
     public Image img;
     public TextMeshProUGUI price;
 
-    public TextMeshProUGUI explain;
+    private Image thisRay;
 
     public void SetResource(TowerResource tower)
     {
@@ -26,11 +26,16 @@ public class TowerSlot : MonoBehaviour
         window1.color = Shop.Instance.levelColor[tower.level];
         img.sprite = tower.img;
         price.text = (tower.level + 1).ToString();
-        explain.text = tower.explain;
     }
 
-    public void Update()
+    private void Awake()
+    {
+        thisRay = GetComponent<Image>();
+    }
+
+    private void Update()
     {
         item.SetActive(!hide);
+        thisRay.raycastTarget = !hide;
     }
 }
