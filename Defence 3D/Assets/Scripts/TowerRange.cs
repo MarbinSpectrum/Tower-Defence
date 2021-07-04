@@ -10,10 +10,10 @@ public class TowerRange : MonoBehaviour
     private float nowRange;
     private void Update()
     {
+        rangeObject.gameObject.SetActive(TowerDrag.nowDrag != null && TowerDrag.nowDrag.gameObject == gameObject);
+
         if (towerObject.towerResource == null)
             return;
-
-        rangeObject.gameObject.SetActive(!CameraManager.nowZoom || towerObject.towerResource.buffTower);
 
         if(nowRange != towerObject.range)
         {

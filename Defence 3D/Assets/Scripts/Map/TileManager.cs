@@ -37,7 +37,7 @@ public class TileManager : Singleton<TileManager>
         int cost = towerSlot.towerResource.level + 1;
         TowerCheckState checkS = CheckTowerSet(cost);
 
-        if(checkS == TowerCheckState.Gold_Lack)
+        if (checkS == TowerCheckState.Gold_Lack)
         {
             ShowText.ViewText("금화가 부족합니다.");
             SoundManager.PlaySE(SE.Error);
@@ -73,15 +73,15 @@ public class TileManager : Singleton<TileManager>
             }
         }
 
-        if (checkS != TowerCheckState.Can_Set)
-            return;
-
         if (checkS == TowerCheckState.Tower_MAX)
         {
             ShowText.ViewText("타워의 최대 갯수를 초과했습니다.");
             SoundManager.PlaySE(SE.Error);
             return;
         }
+
+        if (checkS != TowerCheckState.Can_Set)
+            return;
 
         towerSlot.hide = true;
         PlayerState.Instance.gold -= cost;
@@ -95,6 +95,7 @@ public class TileManager : Singleton<TileManager>
         if (temp.GetComponent<TowerObject>() == null)
             temp.AddComponent<TowerObject>();
         temp.GetComponent<TowerObject>().towerResource = towerSlot.towerResource;
+        temp.GetComponent<TowerRange>().enabled = true;
         SoundManager.PlaySE(SE.Gold);
         SoundManager.PlaySE(SE.ObjMove);
 
